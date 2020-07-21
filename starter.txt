@@ -1,1 +1,43 @@
 initital starter file
+
+Strategy
+
+Keep segments aligned to segment sized grid when the snake turns.
+
+Forget the stripes if it looks weird.
+
+Always add to the tail.
+
+When turn starts, go into turn mode.  This allows the snake to align to the grid before beginning the turn.
+
+It's possible to accumulate turns.  At users risk.
+
+Speed must be be integer of segment size.
+
+When turn begins. Two things happen.
+1 - Wait for alignment
+2 - Execute the turn
+After this turn mode is turned off
+
+Trailing segments will then execute the same turn one after the other.
+They will inherit that turn from their leading segment.
+Actually they inherit a non-turn.  Whatever the leading segment is doing, they will do.
+
+Another way to do this is not do anything.  The snake stays staionary. And it appears like it moves.
+
+Always add a segment.  Always removing.   This is more straight-forward.
+
+only working on a head and tail at any one moment.
+
+t s s h
+in this case we have a snake 3 segments long.  100% tail and 0% head 
+then 50% tail and 50% head.  Whatever.  Until we get to 0% tail and 100% head.
+When that happens the tail is lopped off.  and a new head is added.  
+
+I like this tons better.
+Solves a lot of trouble.  
+No stripes though.  although i'm sure there's things that can be done.
+
+
+
+
