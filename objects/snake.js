@@ -9,7 +9,7 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", speed: 1, dir: DOWN, nextDir: NONE, headSize:0, parts: [] };
+    var snake = { type: "complex", speed: 2.5, dir: DOWN, nextDir: NONE, headSize:0, parts: [] };
     snake.parts = getSegments(snake.speedx, snake.speedy);
     return snake;
 }
