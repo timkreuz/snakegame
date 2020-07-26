@@ -1,5 +1,5 @@
 
-const SEG_SIZE = 10;
+const SEG_SIZE = 8;
 const BASE_COLOR = "#00ff00";
 const STRIPE_COLOR = "#ffff00";
 const NONE = "none";
@@ -9,7 +9,7 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", speed: 2.5, dir: DOWN, nextDir: NONE, headSize:0, parts: [] };
+    var snake = { type: "complex", speed: 2, dir: DOWN, nextDir: NONE, headSize:0, parts: [] };
     snake.parts = getSegments(snake.speedx, snake.speedy);
     return snake;
 }
@@ -39,9 +39,11 @@ export function updateSnake(game) {
         if (game.events.rightPressed && (snake.dir == UP || snake.dir == DOWN)) snake.nextDir = RIGHT;
     }
 
-    //the head increases by the speed
+    //make sure the head is not bigger than the segment size
     snake.headSize = snake.headSize + snake.speed;
-    if (snake.headSize >= SEG_SIZE) snake.headSize = SEG_SIZE;
+    if (snake.headSize >= SEG_SIZE) {
+        snake.headSize = SEG_SIZE;
+    } 
 
     //subtract a little from the tail
     var tail = snake.parts[0];
@@ -54,7 +56,7 @@ export function updateSnake(game) {
     //if the current head is 100% done, then chop of the tail piece (shift) and add a new head (push)
     //shift removes the first element of an array
     //push adds a new element to the end of the array
-    if (snake.headSize == SEG_SIZE) {
+    if (snake.headSize == SEG_SIZE) { 
         snake.parts.shift();
         var oldHead = snake.parts[snake.parts.length - 1];
         var newHead = { type: "rectangle", x: oldHead.x, y: oldHead.y + SEG_SIZE, width: SEG_SIZE, height: 0, color: BASE_COLOR };
