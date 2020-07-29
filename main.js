@@ -1,7 +1,7 @@
-import {getGame} from './controllers/game.js';
-import {drawGame} from './controllers/draw.js';
-import {updateGame} from './controllers/update.js';
-import {keyDown, keyUp} from './controllers/events.js';
+import { getGame } from './controllers/game.js';
+import { drawGame } from './controllers/draw.js';
+import { updateGame } from './controllers/update.js';
+import { keyDown, keyUp } from './controllers/events.js';
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);

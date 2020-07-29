@@ -1,4 +1,3 @@
-
 const SEG_SIZE = 10;
 const BASE_COLOR = "#00ff00";
 const STRIPE_COLOR = "#ffff00";
@@ -9,7 +8,7 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", speed: 2.5, dir: DOWN, nextDir: NONE, headSize:0, parts: [] };
+    var snake = { type: "complex", speed: 2.5, dir: DOWN, nextDir: NONE, headSize: 0, parts: [] };
     snake.parts = getSegments(snake.speedx, snake.speedy);
     return snake;
 }
@@ -61,7 +60,7 @@ export function updateSnake(game) {
         if (newHead.y > game.canvas.height) newHead.y = 0;
         snake.parts.push(newHead);
         snake.headSize = 0;
-    } 
+    }
 
     return snake;
 }
