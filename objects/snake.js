@@ -1,7 +1,6 @@
 
-const SEG_SIZE = 8;
+const SEG_SIZE = 10;
 const BASE_COLOR = "#00ff00";
-const STRIPE_COLOR = "#ffff00";
 const NONE = "none";
 const UP = "up";
 const DOWN = "down"
@@ -9,7 +8,7 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", speed: 2.0, nextDir: NONE, nextDir2: NONE, headSize: 0, parts: [] };
+    var snake = { type: "complex", speed: 1.25, nextDir: NONE, headSize: 0, parts: [] };
     snake.parts = getSegments(snake.speedx, snake.speedy);
     return snake;
 }
@@ -35,35 +34,32 @@ export function updateSnake(game) {
     var tail = snake.parts[0];
 
     //register the next Direction.  We won't actually change directions until the current head gets to 100%
-    if (snake.nextDir == NONE || snake.nextDir2 == NONE) {
-        if (game.events.upPressed && (head.dir == LEFT || head.dir == RIGHT)) {
-            if (snake.nextDir == NONE) snake.nextDir = UP;
-            else snake.nextDir2 = UP;
+    if (snake.nextDir == NONE) {
+        if (game.events.upPressed) {
+            if (head.dir == LEFT || head.dir == RIGHT) snake.nextDir = UP;
             game.events.upPressed = false;
         }
-        if (game.events.downPressed && (head.dir == LEFT || head.dir == RIGHT)) {
-            if (snake.nextDir == NONE) snake.nextDir = DOWN;
-            else snake.nextDir2 = DOWN;
+        if (game.events.downPressed) {
+            if (head.dir == LEFT || head.dir == RIGHT) snake.nextDir = DOWN;
             game.events.downPressed = false;
         }
-        if (game.events.leftPressed && (head.dir == UP || head.dir == DOWN)) {
-            if (snake.nextDir == NONE) snake.nextDir = LEFT;
-            else snake.nextDir2 = LEFT;
+        if (game.events.leftPressed) {
+            if (head.dir == UP || head.dir == DOWN) snake.nextDir = LEFT;
             game.events.leftPressed = false;
         }
-        if (game.events.rightPressed && (head.dir == UP || head.dir == DOWN)) {
-            if (snake.nextDir == NONE) snake.nextDir = RIGHT;
-            else snake.nextDir2 = RIGHT;
+        if (game.events.rightPressed) {
+            if (head.dir == UP || head.dir == DOWN) snake.nextDir = RIGHT;
             game.events.rightPressed = false;
         }
     }
-
+    
     //make sure the head is not bigger than the segment size
     snake.headSize = snake.headSize + snake.speed;
     if (snake.headSize >= SEG_SIZE) {
         snake.headSize = SEG_SIZE;
     }
 
+    //make the snake move. add to head.
     if (head.dir == UP) {
         head.y = head.y - snake.speed;
         head.height = head.height + snake.speed;
@@ -79,6 +75,7 @@ export function updateSnake(game) {
         head.width = head.width + snake.speed;
     }
 
+    //make snake move.  subtract from tail.
     if (tail.dir == UP) {
         tail.height = SEG_SIZE - snake.headSize;
     }
@@ -94,20 +91,25 @@ export function updateSnake(game) {
         tail.width = SEG_SIZE - snake.headSize;
     }
 
+    //check to see if its time for a new segment
     if (snake.headSize == SEG_SIZE) {
+
+        //lop off tail
         snake.parts.shift();
         snake.headSize = 0;
 
+        //is the new head moving in the same direction or different
         var newDir = head.dir;
         if (snake.nextDir != NONE) {
             newDir = snake.nextDir;
-            snake.nextDir = snake.nextDir2;
-            snake.nextDir2 = NONE;
+            snake.nextDir = NONE;
         }
         head.dir = newDir;
 
+        //create the new head
         var newHead = { type: "rectangle", dir: newDir, x: head.x, y: head.y, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
 
+        //configure the new head based on it's direction
         if (newHead.dir == UP) {
             newHead.height = 0;
             if (newHead.y == 0) newHead.y = canvas.height; 
@@ -131,7 +133,8 @@ export function updateSnake(game) {
             if (newHead.x == canvas.width - SEG_SIZE) newHead.x = 0; 
             else newHead.x = newHead.x + SEG_SIZE;
         }
-            
+
+        //add the new head to the snake
         snake.parts.push(newHead);
     }
 

@@ -19,6 +19,9 @@ function drawObject(ctx, object) {
     if (object.type == "rectangle") {
         drawRectangle(ctx, object);
     }
+    if (object.type == "image") {
+        drawImage(ctx, object);
+    }
     if (object.type == "complex") {
         drawComplex(ctx, object.parts)
     }
@@ -27,6 +30,14 @@ function drawObject(ctx, object) {
 function drawRectangle(ctx, object) {
     ctx.beginPath();
     ctx.rect(object.x, object.y, object.width, object.height);
+    ctx.fillStyle = object.color;
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawImage(ctx, object) {
+    ctx.beginPath();
+    ctx.drawImage(object.img, object.y, object.width, object.height);
     ctx.fillStyle = object.color;
     ctx.fill();
     ctx.closePath();
