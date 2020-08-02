@@ -1,4 +1,5 @@
 import {getSnake} from '../objects/snake.js';
+import {getApples} from '../objects/apples.js';
 // import {getStats} from '../objects/stats.js'; 
 
 export function getGame() {
@@ -9,6 +10,7 @@ export function getGame() {
     // var infoCenter = document.getElementById("infoCenter");
     // var infoCtx = infoCenter.getContext("2d");
     var snake = getSnake(canvas);
+    var apples = getApples(canvas);
     var events = {upPressed: false, downPressed: false, leftPressed: false, rightPressed: false,
                   spacePressed:false};
 
@@ -17,6 +19,8 @@ export function getGame() {
                 canvas: canvas, ctx: ctx,
                 events: events,
                 // stats: stats,
-                snake: snake};
+                snake: snake,
+                apples: apples
+            };
     return game;
 }
