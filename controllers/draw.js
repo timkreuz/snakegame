@@ -12,22 +12,24 @@ function displayScore(game) {
 
 function drawObjects(game) {
     game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
-    drawObject(game.ctx, game.snake);
     drawObject(game.ctx, game.apples);
+    drawObject(game.ctx, game.snake);
 }
 
 function drawObject(ctx, object) {
-    if (object.type == "rectangle") {
-        drawRectangle(ctx, object);
-    }
-    if (object.type == "circle") {
-        drawCircle(ctx, object);
-    }
-    if (object.type == "image") {
-        drawImage(ctx, object);
-    }
-    if (object.type == "complex") {
-        drawComplex(ctx, object.parts)
+    if (object.hide != true) {
+        if (object.type == "rectangle") {
+            drawRectangle(ctx, object);
+        }
+        if (object.type == "circle") {
+            drawCircle(ctx, object);
+        }
+        if (object.type == "image") {
+            drawImage(ctx, object);
+        }
+        if (object.type == "complex") {
+            drawComplex(ctx, object.parts)
+        }
     }
 }
 
@@ -41,7 +43,7 @@ function drawRectangle(ctx, object) {
 
 function drawCircle(ctx, object) {
     ctx.beginPath();
-    ctx.arc(object.x + object.width/2, object.y + object.height/2,  object.height/2, 0, 2 * Math.PI);
+    ctx.arc(object.x + object.width / 2, object.y + object.height / 2, object.height / 2, 0, 2 * Math.PI);
     ctx.fillStyle = object.color;
     ctx.fill();
     ctx.closePath();
