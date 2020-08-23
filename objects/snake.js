@@ -16,11 +16,11 @@ export function getSnake(canvas) {
 function getSegments(canvas) {
     var xStart = 160;
     var yStart = 0;
-    var tail = { type: "rectangle", dir: DOWN, x: xStart, y: yStart + SEG_SIZE * 4, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s2 = { type: "rectangle", dir: DOWN, x: xStart, y: yStart + SEG_SIZE * 5, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s3 = { type: "rectangle", dir: DOWN, x: xStart, y: yStart + SEG_SIZE * 6, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s4 = { type: "rectangle", dir: DOWN, x: xStart, y: yStart + SEG_SIZE * 7, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var head = { type: "rectangle", dir: DOWN, x: xStart, y: yStart + SEG_SIZE * 8, width: SEG_SIZE, height: 0, color: BASE_COLOR };
+    var tail = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 4, x: xStart, y: yStart + SEG_SIZE * 4, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s2 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 5, x: xStart, y: yStart + SEG_SIZE * 5, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s3 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 6, x: xStart, y: yStart + SEG_SIZE * 6, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s4 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 7, x: xStart, y: yStart + SEG_SIZE * 7, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var head = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 8, x: xStart, y: yStart + SEG_SIZE * 8, width: SEG_SIZE, height: 0, color: BASE_COLOR };
     return [tail, s2, s3, s4, head];
 }
 
@@ -79,18 +79,18 @@ function addToHeadSegment(snake) {
     var head = getHead(snake);
 
     if (head.dir == UP) {
-        head.y = head.y - snake.speed;
-        head.height = head.height + snake.speed;
+        head.y = head.yy + SEG_SIZE - snake.headSize;
+        head.height = snake.headSize;
     }
     if (head.dir == DOWN) {
-        head.height = head.height + snake.speed;
+        head.height = snake.headSize;
     }
     if (head.dir == LEFT) {
-        head.x = head.x - snake.speed;
-        head.width = head.width + snake.speed;
+        head.x = head.xx + SEG_SIZE - snake.headSize;
+        head.width = snake.headSize;
     }
     if (head.dir == RIGHT) {
-        head.width = head.width + snake.speed;
+        head.width = snake.headSize;
     }
 }
 
@@ -102,14 +102,14 @@ function subtractFromTailSegment(snake) {
         tail.height = SEG_SIZE - snake.headSize;
     }
     if (tail.dir == DOWN) {
-        tail.y = tail.y + snake.speed;
+        tail.y = tail.yy + snake.headSize;
         tail.height = SEG_SIZE - snake.headSize;
     }
     if (tail.dir == LEFT) {
         tail.width = SEG_SIZE - snake.headSize;
     }
     if (tail.dir == RIGHT) {
-        tail.x = tail.x + snake.speed;
+        tail.x = tail.x + snake.headSize;
         tail.width = SEG_SIZE - snake.headSize;
     }
 }
@@ -125,8 +125,8 @@ function timeForNewHead(game) {
     var head = getHead(snake);
     makeOldHeadFollowNewHead(head, nextDir);
 
-    var newHead = { type: "rectangle", dir: nextDir, x: head.x, y: head.y, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    orientNewHead(newHead, game.canvas);``
+    var newHead = { type: "rectangle", dir: nextDir, xx: head.xx, yy: head.yy, x: 0, y: 0, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    orientNewHead(newHead, game.canvas);
     snake.parts.push(newHead);
 }
 
@@ -149,27 +149,29 @@ function orientNewHead(newHead, canvas) {
 
     if (newHead.dir == UP) {
         newHead.height = 0;
-        if (newHead.y == 0) newHead.y = canvas.height;
-        else newHead.y = newHead.y;
+        if (newHead.yy == 0) newHead.yy = canvas.height - SEG_SIZE;
+        else newHead.yy = newHead.yy - SEG_SIZE;
     }
 
     if (newHead.dir == DOWN) {
         newHead.height = 0;
-        if (newHead.y == canvas.height - SEG_SIZE) newHead.y = 0;
-        else newHead.y = newHead.y + SEG_SIZE;
+        if (newHead.yy == canvas.height - SEG_SIZE) newHead.yy = 0;
+        else newHead.yy = newHead.yy + SEG_SIZE;
     }
 
     if (newHead.dir == LEFT) {
         newHead.width = 0;
-        if (newHead.x == 0) newHead.x = canvas.width;
-        else newHead.x = newHead.x;
+        if (newHead.xx == 0) newHead.xx = canvas.width - SEG_SIZE;
+        else newHead.xx = newHead.xx - SEG_SIZE;
     }
 
     if (newHead.dir == RIGHT) {
         newHead.width = 0;
-        if (newHead.x == canvas.width - SEG_SIZE) newHead.x = 0;
-        else newHead.x = newHead.x + SEG_SIZE;
+        if (newHead.xx == canvas.width - SEG_SIZE) newHead.xx = 0;
+        else newHead.xx = newHead.xx + SEG_SIZE;
     }
+    newHead.x = newHead.xx;
+    newHead.y = newHead.yy;
 }
 
 function getHead(snake) {
