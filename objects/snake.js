@@ -8,19 +8,19 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", isAlive: true, speed: 1.25, nextDir: NONE, size: 5, headSize: 0, parts: [] };
-    snake.parts = getSegments(snake.speedx, snake.speedy);
+    var snake = { type: "complex", isAlive: true, grow: false, freezeTail: false, speed: 1.25, nextDir: NONE, size: 5, headSize: 0, parts: [] };
+    snake.parts = getSegments();
     return snake;
 }
 
-function getSegments(canvas) {
+function getSegments() {
     var xStart = 160;
     var yStart = 0;
-    var tail = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 4, x: xStart, y: yStart + SEG_SIZE * 4, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s2 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 5, x: xStart, y: yStart + SEG_SIZE * 5, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s3 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 6, x: xStart, y: yStart + SEG_SIZE * 6, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var s4 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 7, x: xStart, y: yStart + SEG_SIZE * 7, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
-    var head = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart = SEG_SIZE * 8, x: xStart, y: yStart + SEG_SIZE * 8, width: SEG_SIZE, height: 0, color: BASE_COLOR };
+    var tail = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart + SEG_SIZE * 4, x: xStart, y: yStart + SEG_SIZE * 4, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s2 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart + SEG_SIZE * 5, x: xStart, y: yStart + SEG_SIZE * 5, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s3 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart + SEG_SIZE * 6, x: xStart, y: yStart + SEG_SIZE * 6, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var s4 =   { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart + SEG_SIZE * 7, x: xStart, y: yStart + SEG_SIZE * 7, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
+    var head = { type: "rectangle", dir: DOWN, xx: xStart, yy: yStart + SEG_SIZE * 8, x: xStart, y: yStart + SEG_SIZE * 8, width: SEG_SIZE, height: 0, color: BASE_COLOR };
     return [tail, s2, s3, s4, head];
 }
 
@@ -96,29 +96,32 @@ function addToHeadSegment(snake) {
 
 function subtractFromTailSegment(snake) {
 
-    var tail = getTail(snake);
+    if (snake.freezeTail == false) {
 
-    if (tail.dir == UP) {
-        tail.height = SEG_SIZE - snake.headSize;
-    }
-    if (tail.dir == DOWN) {
-        tail.y = tail.yy + snake.headSize;
-        tail.height = SEG_SIZE - snake.headSize;
-    }
-    if (tail.dir == LEFT) {
-        tail.width = SEG_SIZE - snake.headSize;
-    }
-    if (tail.dir == RIGHT) {
-        tail.x = tail.x + snake.headSize;
-        tail.width = SEG_SIZE - snake.headSize;
+        var tail = getTail(snake);
+
+        if (tail.dir == UP) {
+            tail.height = SEG_SIZE - snake.headSize;
+        }
+        if (tail.dir == DOWN) {
+            tail.y = tail.yy + snake.headSize;
+            tail.height = SEG_SIZE - snake.headSize;
+        }
+        if (tail.dir == LEFT) {
+            tail.width = SEG_SIZE - snake.headSize;
+        }
+        if (tail.dir == RIGHT) {
+            tail.x = tail.xx + snake.headSize;
+            tail.width = SEG_SIZE - snake.headSize;
+        }
     }
 }
 
 function timeForNewHead(game) {
-    
+
     var snake = game.snake;
     snake.headSize = 0;
-    lopOffTail(snake);
+
     var nextDir = determineNextDir(snake);
     snake.nextDir = NONE;
 
@@ -127,6 +130,20 @@ function timeForNewHead(game) {
 
     var newHead = { type: "rectangle", dir: nextDir, xx: head.xx, yy: head.yy, x: 0, y: 0, width: SEG_SIZE, height: SEG_SIZE, color: BASE_COLOR };
     orientNewHead(newHead, game.canvas);
+    
+
+    if (snake.freezeTail) {
+        snake.freezeTail = false;
+    } else {
+        lopOffTail(snake);
+    }
+
+    if (snake.grow) {
+        snake.grow = false;
+        snake.freezeTail = true;
+    }
+
+
     snake.parts.push(newHead);
 }
 
@@ -195,13 +212,12 @@ function checkForCollisions(game) {
         if (head.x != apple.x || head.y != apple.y) {
             uneatenApples.push(apple);
         } else {
+            game.snake.grow = true;
             console.log("Consumed!");
         }
     }
 
-    console.log(uneatenApples.length);
     game.apples.parts = uneatenApples;
 
-    console.log(game.apples.parts.length);
 
 }
