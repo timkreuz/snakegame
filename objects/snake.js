@@ -31,7 +31,6 @@ export function updateSnake(game) {
     checkForCollisions(game);
 
     if (snake.isAlive) {
-        checkForCollision
         checkForDirectionChange(game);
         incrementHeadSize(snake);
         addToHeadSegment(snake);
@@ -183,10 +182,24 @@ function getTail(snake) {
 
 function checkForCollisions(game) {
 
-    var apples = game.apples;
-    var segments = game.snake.parts;
+    var apples = game.apples.parts;
+    var uneatenApples = [];
+    var snake = game.snake;
+    var segments = snake.parts;
+    var head = getHead(game.snake);
 
+    for (var i = 0; i < apples.length; i++) {
+        var apple = apples[i];
+        if (head.x != apple.x || head.y != apple.y) {
+            uneatenApples.push(apple);
+        } else {
+            console.log("Consumed!");
+        }
+    }
 
+    console.log(uneatenApples.length);
+    game.apples.parts = uneatenApples;
 
+    console.log(game.apples.parts.length);
 
 }
