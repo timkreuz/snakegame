@@ -8,7 +8,7 @@ const LEFT = "left";
 const RIGHT = "right";
 
 export function getSnake(canvas) {
-    var snake = { type: "complex", isAlive: true, grow: false, freezeTail: false, speed: 1.25, nextDir: NONE, size: 5, headSize: 0, parts: [] };
+    var snake = { type: "complex", isAlive: true, grow: 0, freezeTail: false, speed: 1.25, nextDir: NONE, headSize: 0, parts: [] };
     snake.parts = getSegments();
     return snake;
 }
@@ -138,8 +138,8 @@ function timeForNewHead(game) {
         lopOffTail(snake);
     }
 
-    if (snake.grow) {
-        snake.grow = false;
+    if (snake.grow > 1) {
+        snake.grow = snake.grow - 1;
         snake.freezeTail = true;
     }
 
@@ -212,8 +212,17 @@ function checkForCollisions(game) {
         if (head.x != apple.x || head.y != apple.y) {
             uneatenApples.push(apple);
         } else {
-            game.snake.grow = true;
+            game.snake.grow = 8;
+            // game.sounds.crunch.play();
             console.log("Consumed!");
+        }
+    }
+
+    for (var i = 0; i < segments.length - 1; i++) {
+        var segment = segments[i];
+        if (head.x == segment.x && head.y == segment.y) {
+            game.gameOver = true;
+            console.log("Game Over!");
         }
     }
 

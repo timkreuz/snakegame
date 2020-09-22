@@ -1,5 +1,5 @@
 
-const APPLE_COUNT = 10;
+const APPLE_COUNT = 100;
 const APPLE_SIZE = 10;
 const APPLE_RED = "#e60000";
 const URANIUM = "#ffff00";
